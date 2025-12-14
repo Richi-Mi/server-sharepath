@@ -5,7 +5,7 @@ import { ItinerarioModel } from "./itinerario.model";
 import { Brackets } from "typeorm";
 interface AuthUser{
     correo: string;
-    //role: string;
+    role: string;
 }
 
 export class ItinerarioController {
@@ -113,18 +113,13 @@ export class ItinerarioController {
             throw new CustomError("ID invalido", 400);
 
         const itinerario = await this.itinerarioRepository.findOne({
-            where: { 
-                id: id,
-                owner: {
-                    correo: authUser.correo
-                }
-            },
+            where: { id },
             relations: ['owner'],
         });
         if( !itinerario )
             throw new CustomError("Itinerario no encontrado", 404);
 
-        if( itinerario.owner.correo !== authUser.correo )
+        if( itinerario.owner.correo !== authUser.correo && authUser.role !== "admin" )
             throw new CustomError("No tienes permiso para borrar este itinerario", 403);
 
         await this.itinerarioRepository.remove(itinerario);
