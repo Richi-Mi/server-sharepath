@@ -7,6 +7,7 @@ import { UserController } from "./usuario.controller";
 
 import { AuthController } from "../auth/auth.controller";
 import { AuthModel } from "../auth/auth.model";
+import { UserRole } from "../../data/model";
 
 /**
  * * Rutas implementadas para la gestión de la información del usuario.
@@ -143,7 +144,8 @@ export const userRoutes = new Elysia({ prefix: "/user", name: "Usuario" })
     /* Registrar un usuario */
     .post("/admin/register",  async ({ status, body}) => {        
         const authController = new AuthController();
-        const usuario = await authController.doRegister(body)
+        const role = body.role === "admin" ? "admin" : "user" ;
+        const usuario = await authController.doRegister({...body, role});
         return status(201, { message: `Usuario con ${usuario.correo} creado` })
     }, {
         body: AuthModel.signUpBody,
@@ -154,8 +156,8 @@ export const userRoutes = new Elysia({ prefix: "/user", name: "Usuario" })
     .get("/all", async ({ userController }) => {
             const usuarios = await userController.getAllUsers();
             return usuarios;
-    }, {
-        beforeHandle: authRole("admin")
+    }, {   
+        beforeHandle: authRole(UserRole.ADMIN)
     })
 
     /* Actualizar los datos de un usuario */

@@ -107,18 +107,15 @@ export class ItinerarioController {
         if(isNaN(id))
             throw new CustomError("ID invalido", 400);
 
-        let itinerario = await this.itinerarioRepository.findOne({
-            where: { 
-                id: id,
-                owner: {
-                    correo: authUser.correo
-                }
-            },
+
+        const itinerario = await this.itinerarioRepository.findOne({
+            where: { id },
             relations: ['owner'],
         });
 
-        if (!itinerario)
-            throw new CustomError("Itinerario no encontrado", 404);
+        if( itinerario.owner.correo !== authUser.correo && authUser.role !== "admin" )
+            throw new CustomError("No tienes permiso para borrar este itinerario", 403);
+
 
         await this.itinerarioRepository.remove(itinerario);
         return itinerario;

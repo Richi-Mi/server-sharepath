@@ -15,7 +15,7 @@ export class UserController {
 
   public getAllUsers = async () => {
     const usuarios = await this.userRepository.find({
-      relations: ["amistades"],
+      // relations: ["amistades"],
     });
 
     /*Para que no se muestren las claves de los usuarios en /user/all*/
