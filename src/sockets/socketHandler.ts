@@ -338,6 +338,7 @@ export function funcionesSockets(io: SocketIOServer) {
     });
 
     socket.on('mark messages received', async ({ withUserID }) => {
+      // console.log(`${withUserID} marco un mensaje como recibido`);
       const repo = pgdb.getRepository(Mensaje);
 
       await repo.createQueryBuilder()

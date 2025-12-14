@@ -108,7 +108,7 @@ export class PublicacionController {
 
         //Obtiene las publicaciones de otros usuarios (ni las mias ni las de mis amigos)
         let otrasPublicaciones = await this.publicacionRepository.find({
-            where: { user_shared: { correo: Not( In( [userCorreo, ...correoAmigos] ) ) } },
+            where: { user_shared: { correo: Not( In( [userCorreo, ...correoAmigos] ) ) }, privacity_mode: true },
             relations: ['itinerario', 'fotos', 'user_shared', 'reseñas', 'reseñas.usuario', 'itinerario.actividades', 'itinerario.actividades.lugar'], //Cargar las relaciones de actividades y lugar porque sino no se pueden buscar con el filter. No se carga esa informacion
         });
 
