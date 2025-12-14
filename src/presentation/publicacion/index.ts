@@ -52,8 +52,15 @@ export const publicacionRoutes = new Elysia({ prefix: "/publicacion", name: "Pub
   .get("/", async ({ status, store, publicacionController }) => {
     const userCorreo = store.user.correo;
     const publicaciones = await publicacionController.getMyPublications(userCorreo);
+    // const publicaciones = await publicacionController.getMyPrueba(userCorreo);
     return status(200, publicaciones);
   })
+  
+  // .get("/prueba", async ({ status, store, publicacionController }) => {
+  //   const userCorreo = store.user.correo;
+  //   const publicaciones = await publicacionController.getMyPrueba(userCorreo);
+  //   return status(200, publicaciones);
+  // })
 
   .post(
     "/share/:id",

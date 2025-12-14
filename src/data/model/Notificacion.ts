@@ -14,6 +14,7 @@ export enum NotificationType {
   COMMENT = "comment",
   REPORT = "report",
   FRIEND_ACCEPTED = "friend_accepted",
+  FRIEND_REJECTED = "friend_rejected",
 }
 
 @Entity()

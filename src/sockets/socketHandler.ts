@@ -187,7 +187,7 @@ export function funcionesSockets(io: SocketIOServer) {
     //biblioteca (jsonwebtoken)
     const URL = Bun.env.HOST+'/user' || "http://localhost:4000/user";
     try {
-      const res = await fetch("http://localhost:4000/user", {
+      const res = await fetch(URL, {
         //const res = await fetch("https://harol-lovers.up.railway.app/user", {
         method: "GET",
 

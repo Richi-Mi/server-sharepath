@@ -26,6 +26,7 @@ export const itinerarioRoutes = new Elysia({ prefix: "/itinerario", name: "Itine
     .decorate('itinerarioController', new ItinerarioController())
     .decorate('recommendationController', new RecommendationController())
     .use(authService)
+
     .get("/", async ({ status, store, itinerarioController }) => {
         const itinerarios = await itinerarioController.getAllItinerarios(store.user);
         return status(200, itinerarios);
