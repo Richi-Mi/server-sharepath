@@ -1,4 +1,4 @@
-import { Usuario } from "../../data/model";
+import { UserRole, Usuario } from "../../data/model";
 import { AuthModel } from "./auth.model";
 
 import { PostgresDataSource }   from "../../data/PostgresDataSource";
@@ -13,7 +13,7 @@ export class AuthController {
     ) {}
 
     public doRegister = async (data : AuthModel.SignUpBody ) : Promise<Usuario> => {
-        const { nombre_completo, username, correo, foto, password: uncrypted_password } = data
+        const { nombre_completo, username, correo, foto, password: uncrypted_password, role } = data
         // Hash de la contraseña
         const password = await Bun.password.hash(uncrypted_password);
 
@@ -34,6 +34,7 @@ export class AuthController {
         usuario.username = username
         usuario.correo = correo
         usuario.password = password
+        usuario.role = role === UserRole.ADMIN ? UserRole.ADMIN : UserRole.USER;
         
         // Si al registrarse se envió una foto, guardarla.
         if(foto) 

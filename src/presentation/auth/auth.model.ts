@@ -7,6 +7,7 @@ export namespace AuthModel {
         nombre_completo:    t.String({ error: "El nombre completo es necesario" }),
         correo:             t.String({ error: "El correo es necesario" }),
         password:           t.String({ error: "La contraseña es necesaria" }),
+        role:               t.Optional(t.String()),
         foto: t.Optional(
             t.File({ format: ["image/jpeg", "image/png", "image/jpg"] })
         )

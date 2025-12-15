@@ -13,29 +13,29 @@ export class AmigoController {
     private userRepository: Repository<Usuario>
   ) {}
 
-  private friend(correoA: string, correoB?: string, tatus: FriendRequestState = FriendRequestState.FRIEND) {
+  private friend(correoA: string, correoB?: string, status: FriendRequestState = FriendRequestState.FRIEND) {
     if (correoB) {
       return [
         {
           requesting_user: { correo: correoA },
           receiving_user: { correo: correoB },
-          status: FriendRequestState.FRIEND,
+          status,
         },
         {
           requesting_user: { correo: correoB },
           receiving_user: { correo: correoA },
-          status: FriendRequestState.FRIEND,
+          status,
         },
       ];
     }
     return [
       {
         requesting_user: { correo: correoA },
-        status: FriendRequestState.FRIEND,
+        status,
       },
       {
         receiving_user: { correo: correoA },
-        status: FriendRequestState.FRIEND,
+        status,
       },
     ];
   }
@@ -213,39 +213,22 @@ export class AmigoController {
     return list.filter((u) => u.username.toLowerCase().includes(q));
   }
 
-  async removeFriend(user: string, friend: string) {
-    const usuario = await this.userRepository.findOne({
-      where: [{ correo: user }, { username: user }]
-    });
-    const amigo = await this.userRepository.findOne({
-      where: [{ correo: friend }, { username: friend }]
-    }); 
-
-    if (!usuario || !amigo)
-       throw new CustomError("Este usuario no existe", 404);
+  async removeFriend(user: string, friend: string){
+    if (user === friend)
+      throw new CustomError("No puedes eliminarte a ti", 400); 
 
     const relation = await this.amigoRepository.findOne({
-         where: [
-      {
-        requesting_user: { correo: usuario.correo },
-        receiving_user: { correo: amigo.correo },
-        status: FriendRequestState.FRIEND,
-      },
-      {
-        requesting_user: { correo: amigo.correo },
-        receiving_user: { correo: usuario.correo },
-        status: FriendRequestState.FRIEND,
-      },
-    ],
-    });
+      where: this.friend(user, friend),
+    }); 
 
-    if (!relation) throw new CustomError("Ya no son amigos ", 404);
+    if(!relation) 
+      throw new CustomError("No son amigos", 404); 
 
-    return this.amigoRepository.remove(relation);
+    await this.amigoRepository.remove(relation);
+    return relation;
   }
 
-
-    async block(user: string, block: string ) {
+   async block(user: string, block: string ) {
 
         const senderUser = await this.userRepository.findOne({
              where: [{ correo: user }, { username: user }]
@@ -296,7 +279,7 @@ export class AmigoController {
             throw new CustomError("Este usuario no esta bloqueado", 404);
 
         req.status = FriendRequestState.FRIEND;
-        return this.amigoRepository.remove(req!); 
+        return this.amigoRepository.save(req!); 
     }
 
    async listBlock(user: string){
