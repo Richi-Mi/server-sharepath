@@ -263,12 +263,26 @@ export function funcionesSockets(io: SocketIOServer) {
             }
           });
 
+          const Msg = await mensajeRepo.findOne({
+            where:[
+              { emisor: {correo: amigo.userID}, receptor: { correo: userID } }, //El ultimo mensaje es de mi amigo
+              { receptor: { correo: amigo.userID }, emisor: { correo: userID } } //El ultimo mensaje es mio
+            ],
+            order: {
+              horaMensaje: 'DESC'
+            }
+          });
+
+          const ultimoMsg = Msg || null;
+
           usersMap.push({
             userID: amigo.userID,
             username: amigo.username,
             foto_url: amigo.foto_url,
             connected: isFriendOnline,
-            messages: [],
+            messages: ultimoMsg?.text,
+            lastMessage: ultimoMsg ? ultimoMsg.text : null,
+            lastMessageHora: ultimoMsg ? ultimoMsg.horaMensaje : null,
             unreadCount: sinLeer
           })
         }
