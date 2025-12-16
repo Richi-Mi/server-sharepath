@@ -288,6 +288,12 @@ export function funcionesSockets(io: SocketIOServer) {
         }
         //console.log(`[Friends] Enviando ${users.length} amigos al cliente.`);
 
+        usersMap.sort((a, b) => { //Esta parte ordena la lista de chats por orden cronologico (el mas reciente primero)
+          const dateA = a.lastMessageHora ? new Date(a.lastMessageHora).getTime() : 0;
+          const dateB = b.lastMessageHora ? new Date(b.lastMessageHora).getTime() : 0;
+
+          return dateB - dateA; //El front recibe la lista de chats y se muestrab ordenadas, con esto no se modifico socket.on("users")
+        });
         socket.emit("users", usersMap); //Enviar la lista de amigos como respuesta
     });
 
