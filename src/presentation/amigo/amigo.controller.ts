@@ -88,7 +88,6 @@ export class AmigoController {
 
     await PostgresDataSource.manager.save(newNotificacion);
     const noti = await this.userRepository.find();
-    console.log(noti);
 
     notificarUsuario(receivingUser.correo, {
       tipo: "FRIEND_REQUEST",
@@ -156,7 +155,6 @@ export class AmigoController {
 
     await PostgresDataSource.manager.save(newNotificacion);
     const noti = await this.userRepository.find();
-    console.log(noti);
 
     notificarUsuario(req.requesting_user.correo, {
        tipo: tipoAccion,

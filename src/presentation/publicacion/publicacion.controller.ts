@@ -118,7 +118,6 @@ export class PublicacionController {
             otrasPublicaciones = otrasPublicaciones.filter(pub => {
                 const estados = pub.itinerario.actividades.map(act => sinAcentos(act.lugar.mexican_state)) || [];
 
-                // console.log(estados);
                 const edosSinAcentos = estadosVisitados.map(e => sinAcentos(e));
 
                 const coincide = estados.some(estado => edosSinAcentos.includes(estado));

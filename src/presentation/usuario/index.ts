@@ -97,7 +97,6 @@ export const userRoutes = new Elysia({ prefix: "/user", name: "Usuario" })
 
         try {
             
-            console.log("Buscando perfil con término:", terminoBusqueda); 
             const user = await userController.getProfileBySearch(terminoBusqueda);
             
             return status(200, user);

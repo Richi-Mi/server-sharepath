@@ -35,7 +35,6 @@ export class FileDataSource {
       await fs.mkdir(this.uploadDir, { recursive: true });
       await fs.writeFile(filePath, buffer);
 
-      console.log(this.hostUrl);
       const publicUrl = new URL(`/fotos/${filename}`, this.hostUrl);
       return publicUrl.href;
     } catch (error) {

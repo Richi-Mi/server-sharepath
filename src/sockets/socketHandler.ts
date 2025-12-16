@@ -19,7 +19,6 @@ async function guardaMensaje(text: string, emisor: string, receptor: string) {
   nuevoMensaje.edoMensaje = estadoMensaje.ENVIADO;
 
   return await repo.save(nuevoMensaje);
-  //console.log(`Mensaje de ${emisor} para ${receptor} guardado en la BD`);
 }
 
 /*misMensajes*/
@@ -163,12 +162,9 @@ export function funcionesSockets(io: SocketIOServer) {
     //Reconexion con sessionID, es decir, si hay sessionID utilizala para la reconexcion, si no hay sessionID asigna una nueva
     const sessionID = socket.handshake.auth.sessionID;
     if (sessionID) {
-      //console.log('Hola desde sesion existente')
       const session = sessionStore.findSession(sessionID);
       if (session) {
-        //console.log('Sesion ID: ', session);
-        //console.log('User ID: ', session.userID);
-        //console.log('Username:  ', session.username);
+        
         (socket as any).sessionID = sessionID;
         (socket as any).userID = session.userID;
         (socket as any).username = session.username;
@@ -220,8 +216,6 @@ export function funcionesSockets(io: SocketIOServer) {
   io.on("connection", async (socket: Socket) => {
     //Se obtienen los datos del socket
     const { userID, username, sessionID } = (socket as any);
-    // console.log("Usuario conectado: ", userID);
-    //console.log(`Socket AUTENTICADO conectado: ${username} (ID: ${userID})`);
     
     //Unirse a la sala privada
     socket.join(userID);
@@ -241,7 +235,6 @@ export function funcionesSockets(io: SocketIOServer) {
     socket.join(userID);
 
     socket.on("get friends list", async () => {
-        //console.log(`Buscando amigos y mensajes de ${userID} en la BD. get friends list recibido`);
 
         const listaAmigos = await getFriends(userID); //Obtener amigos de la BD
 
@@ -286,7 +279,6 @@ export function funcionesSockets(io: SocketIOServer) {
             unreadCount: sinLeer
           })
         }
-        //console.log(`[Friends] Enviando ${users.length} amigos al cliente.`);
 
         usersMap.sort((a, b) => { //Esta parte ordena la lista de chats por orden cronologico (el mas reciente primero)
           const dateA = a.lastMessageHora ? new Date(a.lastMessageHora).getTime() : 0;
@@ -322,15 +314,8 @@ export function funcionesSockets(io: SocketIOServer) {
 
     //Escuchar notificaciones
     socket.on("send notification", (data) => {
-      console.log(data);
       socket.emit("receive notification", data);
     });
-
-    //Logs de deupracion
-    // console.log("debug de amigos");
-    // console.log(`Buscando amigos para el userID: ${userID}`);
-    // console.log("Claves disponibles en friendListsDB:", Object.keys(friendListsDB));
-    //Logs de depuracion
 
     //Escuchar mensajes privados
     socket.on("private message", async ({ content, to }) => {
@@ -358,7 +343,6 @@ export function funcionesSockets(io: SocketIOServer) {
     });
 
     socket.on('mark messages received', async ({ withUserID }) => {
-      // console.log(`${withUserID} marco un mensaje como recibido`);
       const repo = pgdb.getRepository(Mensaje);
 
       await repo.createQueryBuilder()
@@ -393,7 +377,6 @@ export function funcionesSockets(io: SocketIOServer) {
     socket.on("disconnect", async () => {
       //userID y sessionID
       const { userID, username, sessionID } = (socket as any);
-      // console.log("Usuario desconectado: ", userID);
 
       //await new Promise(resolve => setTimeout(resolve, 1000)); Para quitar el parpadeo de desconectado/conectado (se recarga la pagina)
 
@@ -401,7 +384,6 @@ export function funcionesSockets(io: SocketIOServer) {
       const matchingSockets = await io.in(userID).allSockets();
       const isDisconnected = matchingSockets.size === 0;
       if (isDisconnected) {
-        //console.log(`Disconnected - Usuario $username (${userID}) totalmente desconectado`);
         const listaAmigos = await getFriends(userID); //Obtener amigos de la BD
         listaAmigos.forEach((amigo) => {
           //No usar 'socket.to()' porque el socket esta muerto, no hay socket. Si se envian mensajes y el destinatario se desconecto, no vera los mensajes
@@ -409,7 +391,6 @@ export function funcionesSockets(io: SocketIOServer) {
 
           //Usar 'io.to()' (el servidor principal). Si se envian mensajes y el destinatario se desconecto, al conectarse de nuevo vera esos mensajes
           io.to(amigo.userID).emit("user disconnected", userID);
-          //console.log('Usuario desconectado', userID);
         });
         sessionStore.saveSession(sessionID, {
           sessionID: sessionID,

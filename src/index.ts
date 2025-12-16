@@ -41,9 +41,7 @@ const app = new Elysia()
   })
 
   .error({ 'custom': CustomError })
-  .onError(({ code, error, status }) => {  
-    console.log(error);
-       
+  .onError(({ code, error, status }) => {         
     if (code === 'custom') {
       const customError = error as CustomError;
       return status(customError.statusCode, customError.toResponse());
