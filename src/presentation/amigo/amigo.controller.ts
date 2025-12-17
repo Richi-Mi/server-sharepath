@@ -6,6 +6,7 @@ import { CustomError } from "../../domain/CustomError";
 import { Repository } from "typeorm";
 
 import { notificarUsuario } from "../../sockets/socketHandler";
+import { status } from "elysia";
 
 export class AmigoController {
   constructor(
@@ -196,19 +197,10 @@ export class AmigoController {
     return listF;
   }
 
-  async searchFriend(correo: string, query: string) {
-    const listF = await this.amigoRepository.find({
-      where: this.friend(correo),
-      relations: ["requesting_user", "receiving_user"],
-    });
-
-    const list = listF.map((a) =>
-      a.requesting_user.correo === correo ? a.receiving_user : a.requesting_user
-    );
-
-    const q = query.toLowerCase();
-
-    return list.filter((u) => u.username.toLowerCase().includes(q));
+  async countFriends(correo: string) {
+  return this.amigoRepository.count({
+    where: this.friend(correo),
+  });
   }
 
   async removeFriend(user: string, friend: string){
@@ -289,14 +281,27 @@ export class AmigoController {
            throw new CustomError("Este usuario no existe", 404);
 
         const blockedUsers = await this.amigoRepository.find({
-            where: {
+            where: 
+            [{
                 requesting_user: { correo: sender.correo },
                 status: FriendRequestState.LOCKED
-            }, 
-            relations: ["receiving_user"],
+            }, {
+              receiving_user: { correo: sender.correo }, 
+              status: FriendRequestState.LOCKED
+            }
+          ], 
+            relations: ["receiving_user",  "requesting_user"],
         }); 
-
-        return blockedUsers.map(block => ({ username: block.receiving_user.username, nombre_completo: block.receiving_user.nombre_completo, correo: block.receiving_user.correo, foto_url: block.receiving_user.foto_url }));
+        return { message: "Usuarios bloqueados:", data: blockedUsers.map(block => { 
+          const otherUser = block.requesting_user.correo === sender.correo ? block.receiving_user : block.requesting_user;
+          return {
+            username: otherUser.username,
+            nombre_completo: otherUser.nombre_completo,
+            correo: otherUser.correo,
+            foto_url: otherUser.foto_url
+          };
+        })
+  };
     }
     
   async getFriendsOfFriends(correo: string): Promise<
