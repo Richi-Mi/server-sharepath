@@ -88,44 +88,43 @@ export class ReporteController {
         }
         // Eliminamos la publicación 
         await this.publicacionRepository.delete(reporte.publicacion.id);
-        await this.reporteRepository.delete(reporteId);
-        return { message: "Publicación eliminada correctamente y reporte cerrado." };
-    }
+    await this.reporteRepository.delete(reporteId);
+    return { 
+        message: "Publicación eliminada correctamente y reporte cerrado." 
+    };
+} 
+async getAdminReportsPreview() {
+    const reportes = await this.reporteRepository.find({
+        relations: [
+            "publicacion",
+            "publicacion.fotos",     
+            "publicacion.itinerario"  
+        ],
+        order: { id: 'DESC' } 
+    });
 
-    async getAdminReportsPreview() {
-        const reportes = await this.reporteRepository.find({
-            relations: [
-                "publicacion",
-                "publicacion.fotos",      // Para obtener las imágenes
-                "publicacion.itinerario"  // Para obtener el título del itinerario
-            ],
-            order: { id: 'DESC' } // Mostramos los más recientes primero
-        });
-
-        return reportes.map(reporte => {
-            const pub = reporte.publicacion;
-            
-            // Si la publicación ya fue borrada (es null), devolvemos datos vacíos para no romper el front
-            if (!pub) {
-                return {
-                    reporte_id: reporte.id,
-                    motivo_reporte: reporte.description,
-                    estatus: "Publicación eliminada previamente",
-                    data: null
-                };
-            }
-
+    return reportes.map(reporte => {
+        const pub = reporte.publicacion;
+        if (!pub) {
             return {
                 reporte_id: reporte.id,
                 motivo_reporte: reporte.description,
-                data: {
-                    publicacion_id: pub.id,
-                    descripcion: pub.descripcion,
-                    fotos: pub.fotos ? pub.fotos.map(f => f.foto_url) : [],
-                    itinerario_id: pub.itinerario ? pub.itinerario.id : null,
-                    itinerario_titulo: pub.itinerario ? pub.itinerario.title : "Sin itinerario asociado"
-                }
+                estatus: "Publicación eliminada previamente",
+                data: null
             };
-        });
-    }
+        }
+
+        return {
+            reporte_id: reporte.id,
+            motivo_reporte: reporte.description,
+            data: {
+                publicacion_id: pub.id,
+                descripcion: pub.descripcion,
+                fotos: pub.fotos ? pub.fotos.map(f => f.foto_url) : [],
+                itinerario_id: pub.itinerario ? pub.itinerario.id : null,
+                itinerario_titulo: pub.itinerario ? pub.itinerario.title : "Sin itinerario asociado"
+            }
+        };
+    });
+}
 }
