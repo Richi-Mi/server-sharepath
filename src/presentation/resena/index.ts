@@ -31,7 +31,7 @@ export const resenaRoutes = new Elysia({ prefix: "/resena", name: "Resena" })
     .put("/:id", async ({ params, body, store, resenaController, status }) => {
         const resenaId = Number(params.id);
         const resenaActualizada = await resenaController.updateResena(resenaId, store.user, body);
-        return status(200, resenaActualizada);
+        return status(200, { ...resenaActualizada });
     }, {
         params: ResenaModel.resenaParams,
         body: ResenaModel.updateResenaBody
@@ -40,7 +40,7 @@ export const resenaRoutes = new Elysia({ prefix: "/resena", name: "Resena" })
     .delete("/:id", async ({ params, store, resenaController, status }) => {
         const resenaId = Number(params.id);
         const resenaEliminada = await resenaController.deleteResena(resenaId, store.user);
-        return status(200, resenaEliminada);
+        return status(200, { ...resenaEliminada });
     }, {
         params: ResenaModel.resenaParams
     });
