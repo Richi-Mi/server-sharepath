@@ -8,7 +8,7 @@ import { UserController } from "./usuario.controller";
 import { AuthController } from "../auth/auth.controller";
 import { AuthModel } from "../auth/auth.model";
 import { UserRole } from "../../data/model";
-
+import { CustomError } from "../../domain/CustomError";
 /**
  * * Rutas implementadas para la gestión de la información del usuario.
  * @author Mendoza Castañeda José Ricardo
@@ -169,6 +169,7 @@ export const userRoutes = new Elysia({ prefix: "/user", name: "Usuario" })
         body: UserModel.updateUserBody,
         beforeHandle: authRole("admin")
     })
+    
 
     /* Eliminar un usuario */
     .delete("/admin/:correo", async ({ status, params: { correo }, userController }) => {
@@ -181,3 +182,12 @@ export const userRoutes = new Elysia({ prefix: "/user", name: "Usuario" })
     },{
         beforeHandle: authRole("admin")
     })
+    
+    .delete("/admin/delete/:username", async ({ params, store, userController, status }) => {
+        if (store.user.role !== "admin") throw new CustomError("Requiere permisos de admin", 403);
+        
+        const { username } = params;
+        const result = await userController.deleteUserByUsername(username);
+        return status(200, result);
+    })
+    

@@ -207,19 +207,24 @@ export class UserController {
     return responseLimpio;
   }
   public deleteUserByUsername = async (username: string): Promise<{ message: string, deletedUser: string }> => {
-    // 1. Buscamos al usuario por username
-    const user = await this.userRepository.findOne({ where: { username } });
+    // 1. OJO AQUÍ: Debe decir 'username', NO 'correo'
+    const user = await this.userRepository.findOne({ where: { username: username } });
     
+    // Si no lo encuentra, lanzamos error (asegúrate de que CustomError esté importado arriba)
     if (!user) {
-        throw new CustomError("Usuario no encontrado", 404);
+        throw new CustomError(`Usuario con username '${username}' no encontrado`, 404);
     }
 
-    // 2. Eliminamos su foto de perfil del almacenamiento si existe
+    // 2. Eliminamos foto si existe
     if (user.foto_url) {
-        await this.fileDataSource.deleteFile(user.foto_url);
+        try {
+            await this.fileDataSource.deleteFile(user.foto_url);
+        } catch (error) {
+            console.error("Error borrando archivo, continuamos con la eliminación del user:", error);
+        }
     }
 
-    // 3. Eliminamos el registro de la BD
+    // 3. Eliminamos el registro
     await this.userRepository.remove(user);
 
     return { 
