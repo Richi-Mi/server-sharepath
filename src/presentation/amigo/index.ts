@@ -60,14 +60,10 @@ export const amigoRoutes = new Elysia({ prefix: "/amigo", name: "Amigo" })
     return amigoController.listFriend(store.user.correo);
   })
 
-  .get("/search", async ({ store: { user }, query, amigoController }) => {
-    const searchTerm = query.q;
-    const friends = await amigoController.searchFriend(user.correo, searchTerm);
-
-    return { message: "Amigos encontrados", data: friends };
-   }, {
-   query: AmigoModel.searchFriend
-   })
+ .get("cont/:correo", async ({ params, amigoController }) => {
+    const count = await amigoController.countFriends(params.correo);
+    return { message: "Cantidad de amigos: ", data: count };
+  })
 
    .delete("/:username", async ({ store: { user }, params, amigoController }) => {
       const resp = await amigoController.removeFriend(user.username, params.username);
@@ -85,8 +81,7 @@ export const amigoRoutes = new Elysia({ prefix: "/amigo", name: "Amigo" })
    }, { body: AmigoModel.desbloquear  })
 
    .get("/listblock", async ({ store: {user}, amigoController}) => { 
-      const blockedUsers = await amigoController.listBlock(user.correo);
-      return { message: "Usuarios bloqueados: ", data: blockedUsers }; 
+      return await amigoController.listBlock(user.correo);
    })
 
    .get("/sugerencias", async ({ store: { user }, amigoController }) => {
