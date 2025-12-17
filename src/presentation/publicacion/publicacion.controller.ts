@@ -82,15 +82,10 @@ export class PublicacionController {
         
         //Funcion para pasar los estados a minusculas y sin acentos porque en la API vienen sin acentos, y en el cuestionario de preferencias con acentos.
         const sinAcentos = (texto: string) => texto.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase();
-
-        //Obtiene:
-        const lugaresPreferidos = preferencias[0]?.lugares_preferidos; //Los lugares preferidos del usuario
-        const estadosVisitados = preferencias[0]?.estados_visitados; //Los estados preferidos del usuario
-        const actividadesPreferidas = preferencias[0]?.actividades_preferidas; //Las actividades preferidas del usuario
         
         //Obtiene mis publicaciones
         let misPublicaciones = await this.publicacionRepository.find({
-            where: { user_shared: { correo: userCorreo }, privacity_mode: true },
+            where: { user_shared: { correo: userCorreo } },
             relations: ['itinerario', 'fotos', 'user_shared', 'reseñas', 'reseñas.usuario'],
             // order: { id: 'DESC' }
         });
@@ -102,7 +97,7 @@ export class PublicacionController {
 
         //Obtiene las publicaciones de mis amigos
         let publicacionesAmigos = await this.publicacionRepository.find({
-            where: { user_shared: { correo: In(correoAmigos) }, privacity_mode: true },
+            where: { user_shared: { correo: In(correoAmigos) } },
             relations: ['itinerario', 'fotos', 'user_shared', 'reseñas', 'reseñas.usuario'],
         });
 
@@ -115,13 +110,27 @@ export class PublicacionController {
         // Filtra los itinerarios que vayan de acuerdo a las preferencias del usuario
         if(preferencias && preferencias.length !== 0)
         {
+            //Obtiene:
+            const lugaresPreferidos = new Set(preferencias[0].lugares_preferidos); //Los lugares preferidos del usuario
+            const estadosVisitados = new Set(preferencias[0].estados_visitados.map(e => sinAcentos(e))); //Los estados preferidos del usuario
+            const actividadesPreferidas = new Set(preferencias[0].actividades_preferidas); //Las actividades preferidas del usuario
+
             otrasPublicaciones = otrasPublicaciones.filter(pub => {
-                const estados = pub.itinerario.actividades.map(act => sinAcentos(act.lugar.mexican_state)) || [];
+                const actividadesItinerario = pub.itinerario.actividades || [];
 
-                const edosSinAcentos = estadosVisitados.map(e => sinAcentos(e));
+                const tieneCoincidencia = actividadesItinerario.some(act => {
+                    const estadoAct = sinAcentos(act.lugar.mexican_state);
+                    const categoriAct = act.lugar.category;
 
-                const coincide = estados.some(estado => edosSinAcentos.includes(estado));
-                return coincide;
+                    //Verifica si:
+                    return (
+                        estadosVisitados.has(estadoAct) ||          //El estado de la actividad esta en las preferencias
+                        actividadesPreferidas.has(categoriAct) ||   //La categoria de la actividad esta en las preferencias
+                        lugaresPreferidos.has(categoriAct)          //El lugar de la actividad esta en las preferencias
+                    );
+                });
+
+                return tieneCoincidencia
             });   
         }
 
