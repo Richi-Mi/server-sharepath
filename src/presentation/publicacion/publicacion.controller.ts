@@ -90,7 +90,7 @@ export class PublicacionController {
         
         //Obtiene mis publicaciones
         let misPublicaciones = await this.publicacionRepository.find({
-            where: { user_shared: { correo: userCorreo }},
+            where: { user_shared: { correo: userCorreo }, privacity_mode: true },
             relations: ['itinerario', 'fotos', 'user_shared', 'reseñas', 'reseñas.usuario'],
             // order: { id: 'DESC' }
         });
@@ -102,7 +102,7 @@ export class PublicacionController {
 
         //Obtiene las publicaciones de mis amigos
         let publicacionesAmigos = await this.publicacionRepository.find({
-            where: { user_shared: { correo: In(correoAmigos) } },
+            where: { user_shared: { correo: In(correoAmigos) }, privacity_mode: true },
             relations: ['itinerario', 'fotos', 'user_shared', 'reseñas', 'reseñas.usuario'],
         });
 
