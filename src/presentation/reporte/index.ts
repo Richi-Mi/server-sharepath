@@ -43,7 +43,13 @@ export const reportsRoutes = new Elysia({ prefix: "/reports" })
         params: ReporteModel.Params,
         body: ReporteModel.Update
     })
+    .get("/admin/preview", async ({ store, reporteController, status }) => {
+        // Validación de seguridad
+        if (store.user.role !== "admin") throw new CustomError("Requiere permisos de admin", 403);
 
+        const result = await reporteController.getAdminReportsPreview();
+        return status(200, result);
+    })
     .get("/admin/detail/:id", async ({ params, store, reporteController, status }) => {
     if (store.user.role !== "admin") throw new CustomError("Requiere admin", 403);
     
@@ -80,3 +86,4 @@ export const reportsRoutes = new Elysia({ prefix: "/reports" })
     }, {
         params: ReporteModel.Params
     });
+    
