@@ -11,7 +11,7 @@ export const resenaRoutes = new Elysia({ prefix: "/resena", name: "Resena" })
         const publicacionId = Number(params.id);
         
         const nuevaResena = await resenaController.createResena(publicacionId, store.user, body);        
-        return status(201, nuevaResena);
+        return status(201, { ...nuevaResena });
     }, {
         params: ResenaModel.publicacionParams,
         body: ResenaModel.createResenaBody
