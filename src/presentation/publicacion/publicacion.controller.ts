@@ -185,7 +185,7 @@ export class PublicacionController {
 
     public getPublicationWithResenas = async (publicationId: number, authUserCorreo?: string) => {
         const publicacion = await this.publicacionRepository.findOne({
-            where: { id: publicationId },
+            where: { id: publicationId, privacity_mode: true },
             relations: [
                 'itinerario', 
                 'fotos', 
@@ -201,7 +201,7 @@ export class PublicacionController {
 
         let canAccess = false;
         
-        if (publicacion.privacity_mode === false) {
+        if (publicacion.privacity_mode === true) {
             canAccess = true;
         } else if (authUserCorreo) {
             canAccess = publicacion.user_shared.correo === authUserCorreo;

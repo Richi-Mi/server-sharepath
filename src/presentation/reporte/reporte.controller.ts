@@ -44,11 +44,16 @@ export class ReporteController {
     }
 
     async getAll() {
-        return await this.reporteRepository.find({ relations: ["usuario_emitente", "historial"] });
+        return await this.reporteRepository.find({ 
+            relations: ["usuario_emitente", "historial"] 
+        });
     }
 
     async getById(id: number) {
-        return await this.reporteRepository.findOne({ where: { id }, relations: ["usuario_emitente", "historial"] });
+        return await this.reporteRepository.findOne({ 
+            where: { id }, 
+            relations: ["usuario_emitente", "historial"] 
+        });
     }
 
     async update(id: number, payload: Partial<{ description: string, entity_id: string }>) {
@@ -104,7 +109,7 @@ export class ReporteController {
     }
 
     /**
-     * Vista previa para el Admin
+     * Vista previa para el Admin (NUEVA FUNCIÓN)
      */
     async getAdminReportsPreview() {
         const reportes = await this.reporteRepository.find({

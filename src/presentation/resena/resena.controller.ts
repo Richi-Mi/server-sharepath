@@ -18,7 +18,7 @@ export class ResenaController {
         authUser?: AuthUser
     ): Promise<{publicacion: Publicacion, canAccess: boolean}> => {
         const publicacion = await this.publicacionRepository.findOne({
-            where: { id: publicacionId },
+            where: { id: publicacionId, privacity_mode: true },
             relations: ['user_shared']
         });
 
@@ -26,15 +26,7 @@ export class ResenaController {
             throw new CustomError("Publicación no encontrada", 404);
         }
 
-        let canAccess = false;
-        
-        if (publicacion.privacity_mode === false) {
-            canAccess = true;
-        } else if (authUser) {
-            canAccess = publicacion.user_shared.correo === authUser.correo;
-        }
-
-        return { publicacion, canAccess };
+        return { publicacion, canAccess: true };
     };
 
     public createResena = async (
