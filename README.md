@@ -36,7 +36,8 @@ ENVIRONMENT="development"
 HOST="http://localhost:3000"
 ```
 
-NOTA: Si usas docker puedes copiar y pegar el siguiente env:
+
+- NOTA: Si usas docker puedes copiar y pegar el siguiente env:
 
 ```Py
 PORT = 3000
@@ -54,6 +55,9 @@ ENVIRONMENT="development"
 # HOST="https://harol-lovers.up.railway.app"
 HOST="http://localhost:3000"
 ```
+
+- Y ejecutar el docker compose up en tu terminal
+
 ## Reglas para colaborar en el proyecto. 
 
 1. Si no has sido agregado como colaborador del proyecto solicita qué te añada como colaborador del proyecto.

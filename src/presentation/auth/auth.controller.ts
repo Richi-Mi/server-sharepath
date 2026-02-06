@@ -15,14 +15,17 @@ export class AuthController {
     public doRegister = async (data : AuthModel.SignUpBody ) : Promise<Usuario> => {
         const { nombre_completo, username, correo, foto, password: uncrypted_password, role } = data
         // Hash de la contraseña
-        const password = await Bun.password.hash(uncrypted_password);
+        const password      = await Bun.password.hash(uncrypted_password);
 
         // Verificar qué el usuario no exista.
-        const userExists = await this.userRepository.findOneBy({ correo })
+        const userExists    = await this.userRepository.findOneBy({ correo })
+        
         if( userExists )
             throw new CustomError("El correo ya está registrado", 409)
-        // verificar el username es necesario
+
+        // Verificar el username sea unico 
         const usernameExists = await this.userRepository.findOneBy({ username })
+        
         if( usernameExists )
             throw new CustomError("El username ya existe", 409)
 

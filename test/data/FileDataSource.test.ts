@@ -56,7 +56,6 @@ describe('Testing for FileDataSource', () => {
         const image = new File([file], fileName, { type: 'text/plain' })
 
         // Act
-
         try {
             await fileDataSource.saveFile(image)
         }
