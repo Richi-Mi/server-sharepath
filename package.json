@@ -17,6 +17,7 @@
     "typeorm": "^0.3.26"
   },
   "devDependencies": {
+    "@elysiajs/eden": "^1.4.6",
     "bun-types": "latest"
   },
   "module": "src/index.js"

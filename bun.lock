@@ -14,12 +14,15 @@
         "typeorm": "^0.3.26",
       },
       "devDependencies": {
+        "@elysiajs/eden": "^1.4.6",
         "bun-types": "latest",
       },
     },
   },
   "packages": {
     "@elysiajs/cors": ["@elysiajs/cors@1.3.3", "", { "peerDependencies": { "elysia": ">= 1.3.0" } }, "sha512-mYIU6PyMM6xIJuj7d27Vt0/wuzVKIEnFPjcvlkyd7t/m9xspAG37cwNjFxVOnyvY43oOd2I/oW2DB85utXpA2Q=="],
+
+    "@elysiajs/eden": ["@elysiajs/eden@1.4.6", "", { "peerDependencies": { "elysia": ">=1.4.19" } }, "sha512-Tsa4NwXEWg/u73vWiYZQ3L5/ecgZSxqiEjYwpS+4qBKXeTZqZKl2hcgHJSVBL+InEDMi35Xugct7qyAXE5oM4Q=="],
 
     "@elysiajs/jwt": ["@elysiajs/jwt@1.3.3", "", { "dependencies": { "jose": "^6.0.11" }, "peerDependencies": { "elysia": ">= 1.3.0" } }, "sha512-smceSqQdVoIXXdg63DRgyAoeJLoCxE9XYLiujSl7HYYhM+KUGEG2SPVqilJ+z6XjrML5VlcpKROhaXvTMzEW8Q=="],
 

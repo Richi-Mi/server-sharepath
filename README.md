@@ -28,13 +28,32 @@ DB_USER=""
 DB_PASSWORD=""
 DB_NAME="your database"
 
-SECRET_KEY=""
+# Escribe cualquier cosa, es la firma secreta de los tokens.
+SECRET_KEY="Something"
 
-ENVIRONMENT=""
+ENVIRONMENT="development"
 # HOST="https://harol-lovers.up.railway.app"
 HOST="http://localhost:3000"
 ```
 
+NOTA: Si usas docker puedes copiar y pegar el siguiente env:
+
+```Py
+PORT = 3000
+
+DB_HOST="localhost"
+DB_PORT=5432
+DB_USER="postgres"
+DB_PASSWORD="mysecretpassword"
+DB_NAME="sharepath_dev"
+
+# Escribe cualquier cosa, es la firma secreta de los tokens.
+SECRET_KEY="Something"
+
+ENVIRONMENT="development"
+# HOST="https://harol-lovers.up.railway.app"
+HOST="http://localhost:3000"
+```
 ## Reglas para colaborar en el proyecto. 
 
 1. Si no has sido agregado como colaborador del proyecto solicita qué te añada como colaborador del proyecto.

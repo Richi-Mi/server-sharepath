@@ -1,10 +1,10 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, type Relation } from "typeorm";
 import { Usuario } from "./Usuario";
 
-export enum estadoMensaje {
-    ENVIADO, //0
-    RECIBIDO, //1
-    LEIDO //2
+export enum MessageStatus {
+    ENVIADO, 
+    RECIBIDO, 
+    LEIDO 
 }
 
 @Entity()
@@ -20,9 +20,9 @@ export class Mensaje {
 
     @Column({
         type: "enum",
-        enum: estadoMensaje
+        enum: MessageStatus
     })
-    edoMensaje : estadoMensaje
+    edoMensaje : MessageStatus
 
     @ManyToOne(() => Usuario, usuario => usuario.mensajes, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     emisor : Relation<Usuario>

@@ -2,9 +2,9 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Rel
 import { Usuario } from "./Usuario";
 
 export enum FriendRequestState {
-    PENDING, //0
-    FRIEND, //1
-    REJECTED, //2
+    PENDING,
+    FRIEND,
+    REJECTED,
     LOCKED
 }
 
@@ -13,23 +13,21 @@ export class Amigo {
     @PrimaryGeneratedColumn()
     id: number
 
-   // @Column("date")
-   // Date no siempre va a exitir 
-   @Column({type: 'date', nullable: true})
-    fecha_amistad: Date | null; 
+    @Column({ type: 'date', nullable: true })
+    fecha_amistad: Date | null;
 
     @Column({
         type: "enum",
         enum: FriendRequestState,
         default: FriendRequestState.PENDING
     })
-    status : FriendRequestState
-    // Amistad bidireccional A - B = B - A 
+    status: FriendRequestState
+
     @ManyToOne(() => Usuario, usuario => usuario.amistadesRecibidas, { onDelete: "CASCADE", onUpdate: "CASCADE" })
     @JoinColumn({ name: "receiving_user", referencedColumnName: "correo" })
-    receiving_user : Relation<Usuario>
+    receiving_user: Relation<Usuario>
 
     @ManyToOne(() => Usuario, usuario => usuario.amistadesEnviadas, { onDelete: "CASCADE", onUpdate: "CASCADE" })
     @JoinColumn({ name: "requesting_user", referencedColumnName: "correo" })
-    requesting_user : Relation<Usuario>
+    requesting_user: Relation<Usuario>
 }

@@ -2,7 +2,7 @@ import { type Server as SocketIOServer, type Socket } from "socket.io";
 import { randomBytes } from "crypto";
 
 import { PostgresDataSource as pgdb } from "../data/PostgresDataSource";
-import { Amigo, FriendRequestState, Mensaje, Usuario, estadoMensaje } from "../data/model";
+import { Amigo, FriendRequestState, Mensaje, Usuario, MessageStatus } from "../data/model";
 import { In } from "typeorm";
 
 /*guardaMensaje*/
@@ -16,7 +16,7 @@ async function guardaMensaje(text: string, emisor: string, receptor: string) {
   nuevoMensaje.receptor = { correo: receptor } as Usuario;
 
   nuevoMensaje.horaMensaje = new Date();
-  nuevoMensaje.edoMensaje = estadoMensaje.ENVIADO;
+  nuevoMensaje.edoMensaje = MessageStatus.ENVIADO;
 
   return await repo.save(nuevoMensaje);
 }

@@ -29,18 +29,3 @@ export const authRoutes = new Elysia({ prefix: "/auth", name: "Auth" })
     }, {
         body: AuthModel.signInBody
     })
-
-    .post("/google", async ({ status, body, authController, tokenPlugin }) => {
-        const usuario = await authController.loginGoogle(body.correo);
-
-       const { correo, role } = usuario;
-       return {
-              token: await tokenPlugin.sign({ correo, role }),
-              usuario: { role, correo, username: usuario.username, nombre_completo: usuario.nombre_completo, foto_url: usuario.foto_url }
-       }; 
-
-    }, {
-        body: t.Object({
-            correo: t.String()
-        })
-    })

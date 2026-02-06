@@ -1,6 +1,8 @@
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, type Relation } from "typeorm";
 import { Usuario } from "./Usuario";
 
+// TODO: Check Preferences Table and EndPoints
+
 @Entity ()
 export class Preferencias {
     @PrimaryGeneratedColumn()

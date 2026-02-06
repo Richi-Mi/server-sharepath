@@ -4,7 +4,7 @@ import { describe, expect, test } from "bun:test";
 import { FileDataSource } from "../../src/data/FileDataSource";
 import { CustomError } from '../../src/domain/CustomError';
 
-describe('Testing en FileDataSource', () => {
+describe('Testing for FileDataSource', () => {
 
     const fileDataSource = FileDataSource.getInstance()
 
