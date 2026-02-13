@@ -3,7 +3,7 @@ import Elysia, { t } from "elysia";
 import { tokenPlugin } from "../../config/tokens";
 import { CustomError } from "../../domain/CustomError";
 
-type Payload = {
+export type Payload = {
     correo: string, 
     username: string,
     role:   string

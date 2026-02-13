@@ -18,7 +18,7 @@ import { CustomError } from "../../domain/CustomError";
  * @link PUT    /user/update-password - Actualiza la contraseña una vez verificada.
  * @link DELETE /user                 - Elimina el usuario.
  * @author Peredo Borgonio Daniel
- * @link GET    /user/search          - Busca usuarios por nombre o correo.
+ * @link GET    /user/search             - Busca usuarios por nombre o correo.
  * @link GET    /user/profile/:username  - Busca usuarios y regresa toda su informacion (menos su contraseña) junto con sus publicaciones
  * 
  * @admin
@@ -30,10 +30,7 @@ import { CustomError } from "../../domain/CustomError";
 
 export const userRoutes = new Elysia({ prefix: "/user", name: "Usuario" })
     .decorate('userController', new UserController())
-
     .use(authService)
-
-    /************ Rutas para usuarios (rol user) ****************/
     .get("/", async ({ status, store: { user: { correo } }, userController }) => {
 
         const [user, itineraryCount, friendsCount] = await Promise.all([
@@ -45,7 +42,9 @@ export const userRoutes = new Elysia({ prefix: "/user", name: "Usuario" })
         if( !user )
             return status(404)
 
-        return status(200, { ...user, itineraryCount, friendsCount })
+        const { password, ...userData } = user
+
+        return status(200, { ...userData, itineraryCount, friendsCount })
     })
     .put("/update", async ({ status, store: { user: { correo } }, body, userController }) => {
         const { password, ...userUpdated } = await userController.updateUser(correo, body)
@@ -139,8 +138,6 @@ export const userRoutes = new Elysia({ prefix: "/user", name: "Usuario" })
             });
         }
     })
-    /************ Rutas para admins (rol admin) ****************/
-    /* Registrar un usuario */
     .post("/admin/register",  async ({ status, body}) => {        
         const authController = new AuthController();
         const role = body.role === "admin" ? "admin" : "user" ;

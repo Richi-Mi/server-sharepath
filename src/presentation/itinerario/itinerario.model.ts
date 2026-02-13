@@ -13,7 +13,6 @@ export namespace ItinerarioModel {
                     fecha: t.Optional(
                         t.String({ error: "Debe llevar una hora de inicio" })
                     ),
-                    description: t.String({ error: "Debe llevar una descripción" }),
                     lugarId: t.String({ error: "Debe llevar un lugar" }),
                 })
             )
@@ -30,7 +29,6 @@ export namespace ItinerarioModel {
                     fecha: t.Optional(
                         t.String({ error: "Debe llevar una hora de inicio" })
                     ),
-                    description: t.String({ error: "Debe llevar una descripción" }),
                     lugarId: t.String({ error: "Debe llevar un lugar" }),
                 })
             )

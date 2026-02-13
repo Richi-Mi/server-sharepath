@@ -9,7 +9,6 @@ import { PostgresDataSource } from "./data/PostgresDataSource";
 import { userRoutes } from "./presentation/usuario";
 import { lugarRoutes } from "./presentation/lugares";
 import { itinerarioRoutes } from "./presentation/itinerario";
-import { actividadRoutes } from "./presentation/actividad";
 import { authRoutes } from "./presentation/auth";
 import { publicacionRoutes } from "./presentation/publicacion";
 import { preferenciasRoutes } from "./presentation/preferencias";
@@ -64,7 +63,6 @@ const app = new Elysia()
   .use(amigoRoutes)
   .use(lugarRoutes)
   .use(itinerarioRoutes)
-  .use(actividadRoutes)
   .use(publicacionRoutes)
   .use(notificacionRoutes)
   .use(resenaRoutes)

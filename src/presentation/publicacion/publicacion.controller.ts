@@ -21,7 +21,6 @@ export class PublicacionController {
         private readonly fileDataSource = FileDataSource.getInstance("development"), 
         private readonly fotoRepository = PostgresDataSource.getRepository(Foto),
         private readonly publicacionRepository = PostgresDataSource.getRepository(Publicacion),
-
         private prefRepository = PostgresDataSource.getRepository(Preferencias), 
         private itineRepository = PostgresDataSource.getRepository(Itinerario),
         private amigoController : AmigoController = new AmigoController(PostgresDataSource.getRepository(Amigo), PostgresDataSource.getRepository(Usuario)),
@@ -65,16 +64,6 @@ export class PublicacionController {
         return { ...publication, fotos: fileUrls };
          
     }
-
-    // public getMyPublications = async (userCorreo: string) => {
-    //     const publicaciones = await this.publicacionRepository.find({
-    //         // where: { user_shared: { correo: userCorreo } }, //Comentando esta linea se muestran todas las publicaciones
-    //         relations: ['itinerario', 'fotos', 'user_shared', 'reseñas', 'reseñas.usuario'],
-    //         order: { id: 'DESC' }
-    //     });
-
-    //     return publicaciones;
-    // }
 
     public getMyPublications = async (userCorreo: string) => {
         //Obtiene las preferencias del usuario
@@ -177,7 +166,7 @@ export class PublicacionController {
     public deletePublication = async (publicationId: number, userCorreo: string) => {
         const publicacion = await this.publicacionRepository.findOne({
             where: { id: publicationId },
-            relations: ['user_shared']
+            relations: ['user_shared', 'fotos']
         });
 
         if (!publicacion) {
@@ -187,6 +176,13 @@ export class PublicacionController {
         if (publicacion.user_shared.correo !== userCorreo) {
             throw new CustomError("No tienes permiso para borrar esta publicación", 403);
         }
+
+        
+        const fotos = publicacion.fotos.map( (foto) => {
+            return this.fileDataSource.deleteFile(foto.foto_url);
+        })
+
+        await Promise.all(fotos);
 
         await this.publicacionRepository.remove(publicacion);
         return { message: "Publicación eliminada correctamente" };

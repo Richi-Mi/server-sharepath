@@ -1,5 +1,5 @@
 
-import Elysia, { status } from "elysia";
+import Elysia from "elysia";
 import { ItinerarioController } from "./itinerario.controller";
 import { ItinerarioModel } from "./itinerario.model";
 import { RecommendationController } from "./recommendation.controller";

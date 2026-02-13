@@ -12,6 +12,8 @@ import { authService } from "../services/auth.service";
  * @author Gonzalez Lopez Alan Antonio.
  * @link GET    /lugar     - Obtiene los lugares de manera paginada, con limites, etc.
  * @link GET    /lugar/:id - Obtiene un lugar por su ID.
+ * 
+ * @admin
  * @link DELETE /lugar     - Elimina un lugar por ID. (Solo administradores)
  * @link POST   /registro  - Registra un nuevo lugar a la base de datos.
  */

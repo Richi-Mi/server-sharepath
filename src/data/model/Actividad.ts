@@ -10,9 +10,6 @@ export class Actividad {
     @Column({ nullable: true })
     fecha : Date;
 
-    @Column()
-    description : string;
-
     @ManyToOne(() => Lugar, lugar => lugar.actividades, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     lugar : Relation<Lugar>;
 
